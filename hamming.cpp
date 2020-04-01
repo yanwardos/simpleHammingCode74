@@ -3,14 +3,15 @@ using namespace std;
 
 bool inputValidityCheck(string input);
 void hammingParityCheck(string input);
-bool *stringToBits(string input, bool* bitsdata);
+void stringToBits(string input, bool* bitsdata);
 string boolToString(bool input);
-int main(){
+
+int main(int argc, char *argv[]){
     string bitPart;
 
     //input handler
     cout<<"Masukkan 7 bit boolean dalam 1 baris !\n";
-    cout<<"Bits: ";
+    cout<<"Input boolean: ";
     try
     {
         cin>>bitPart;
@@ -20,17 +21,20 @@ int main(){
         std::cerr << e.what() << '\n';
     }
     
+    cout<<"--------------------\n";
+    cout<<"Proses cek: ";
 
     //input validity check
     if(inputValidityCheck(bitPart)){
-
+        //jika lolos uji validitas, lakukan pengecekan
+        hammingParityCheck(bitPart);
+        return 0;
     }else{
         cout<<"Input tidak valid\n";
+        cout<<"--------------------\n\n";
         return 0;
     }
 
-    //paritychecker
-    hammingParityCheck(bitPart);
     return 0;
 }
 
@@ -40,7 +44,6 @@ void hammingParityCheck(string input){
     string errorLog = "";
 
     stringToBits(input, bits);
-
 
     //Hamming code metode manual (tanpa metode aljabar linear)
     bool a = bits[0],
@@ -67,32 +70,32 @@ void hammingParityCheck(string input){
         errorLog = "";
     }else if(state=="001"){
         //parity z tidak sama
-        errorLog = "Data ok | Parity z error";
+        errorLog = "Databit ok | Paritybit z error";
         z = !z;
     }else if(state=="010"){
         //parity y tidak sama
-        errorLog = "Data ok | Parity y error";
+        errorLog = "Databit ok | Paritybit y error";
         y = !y;
     }else if(state=="011"){
         //parity yz tidak sama
         //error di data bit c
-        errorLog = "Data error: bit c";
+        errorLog = "Databit error: bit c";
         c = !c;
     }else if(state=="100"){
         //parity x tidak sama
-        errorLog = "Data ok | Parity x error";
+        errorLog = "Databit ok | Paritybit x error";
         x = !x;
     }else if(state=="101"){
         //parity xz tidak sama
-        errorLog = "Data error: bit b";
+        errorLog = "Databit error: bit b";
         b = !b;
     }else if(state=="110"){
         //parity xy tidak sama
-        errorLog = "Data error: bit a";
+        errorLog = "Databit error: bit a";
         a = !a;
     }else if(state=="111"){
         //parity xyz tidak sama
-        errorLog = "Data error: bit d";
+        errorLog = "Databit error: bit d";
         d = !d;
     }
 
@@ -106,17 +109,21 @@ void hammingParityCheck(string input){
     bits[6] = z;
 
     if(errorLog==""){
-
+        cout<<"Tidak terdapat error!\n";
+        cout<<"--------------------\n";
     }else{
         cout<<"Terdapat eror!\n";
         cout<<errorLog<<endl;
+        cout<<"Boolean bits diperbaiki\n";
+        cout<<"--------------------\n";
     }
 
+    cout<<"Final boolean: \n";
     for(int i=0; i<sizeof(bits); i++){
         cout<<bits[i];
     }
 
-    cout<<endl;
+    cout<<endl<<endl;
 }
 
 /*
@@ -132,6 +139,7 @@ bool inputValidityCheck(string input){
         }
     }else{
         cout<<"Panjang input tidak 7 bit\n";
+        return false;
     }
     return true;
 }
@@ -161,9 +169,7 @@ void stringToBits(string input, bool* bitsdata){
         }else if(input.at(i)=='1'){
             bits[i] = 1;
         }else{
-            return NULL;
+            return ;
         }
     }
-
-    return bits;
 }
