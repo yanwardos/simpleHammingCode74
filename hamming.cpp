@@ -55,6 +55,7 @@ void hammingParityCheck(string input){
         z = bits[6],
         xcek, ycek, zcek;
     
+    //Pengecekan ketepatan masing-masing parity
     xcek = !x == (a^b^d);
     ycek = !y == (a^c^d);
     zcek = !z == (b^c^d);
